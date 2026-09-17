@@ -1,17 +1,26 @@
-# QVAC Local AI
+# QVAC Local AI App
 
 A simple local AI app using Tether's QVAC SDK to run a language model on-device.
-QVAC SDK version: @qvac/sdk 0.19.1
 
 ## Requirements
 
-- Node.js 22.17 or newer
-- npm
-- A computer that supports the QVAC runtime
+* Node.js 22.17+
+* `@qvac/sdk` 0.19.1
 
-## Installation
-
-Clone the repository:
+## Install
 
 ```bash
-git clone https://github.com/profitmindsethq2026-spec/qvac-local-ai-app.git
+npm install
+```
+
+## Run
+
+```bash
+node server.js
+```
+
+Then open `http://localhost:3000` in your browser.
+
+## QVAC Functions
+
+This app uses QVAC's `loadModel()` and `completion()` functions to run AI locally on the device.
