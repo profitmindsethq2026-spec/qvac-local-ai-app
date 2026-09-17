@@ -5,6 +5,8 @@ const {
   unloadModel
 } = require("@qvac/sdk");
 
+const readline = require("readline");
+
 async function main() {
   console.log("Loading QVAC model...");
 
@@ -13,24 +15,45 @@ async function main() {
   });
 
   console.log("Model loaded!");
-  console.log("Asking AI...");
+  console.log("Type a question and press Enter.");
+  console.log("Type 'exit' to quit.\n");
 
-  const result = completion({
-    modelId,
-    history: [
-      {
-        role: "user",
-        content: "What is the capital of the Philippines?"
-      }
-    ],
-    stream: true
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
   });
 
-  for await (const token of result.tokenStream) {
-    process.stdout.write(token);
-  }
+  const askQuestion = () => {
+    rl.question("Ask QVAC: ", async (question) => {
+      if (question.toLowerCase() === "exit") {
+        rl.close();
+        await unloadModel({ modelId });
+        return;
+      }
 
-  await unloadModel({ modelId });
+      console.log("\nAI:");
+
+      const result = completion({
+        modelId,
+        history: [
+          {
+            role: "user",
+            content: question
+          }
+        ],
+        stream: true
+      });
+
+      for await (const token of result.tokenStream) {
+        process.stdout.write(token);
+      }
+
+      console.log("\n");
+      askQuestion();
+    });
+  };
+
+  askQuestion();
 }
 
 main().catch(console.error);
